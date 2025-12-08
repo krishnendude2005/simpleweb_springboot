@@ -26,4 +26,25 @@ public class ProductService {
         updatedList.add(product);
         System.out.println("Product added successfully");
     }
+
+    public void changeProduct(Product product) {
+        for(int i = 0; i < products.size(); i++) {
+            if(products.get(i).getProdId() == product.getProdId()) {
+                products.set(i, product);
+                return;
+            }
+        }
+        System.out.println("product updated successfully");
+
+    }
+
+    public void deleteProduct(int prodId) {
+        for(int i = 0; i < products.size(); i++) {
+            if(products.get(i).getProdId() == prodId) {
+                products.remove(i);
+                return;
+            }
+        }
+        System.out.println("product deleted successfully");
+    }
 }
