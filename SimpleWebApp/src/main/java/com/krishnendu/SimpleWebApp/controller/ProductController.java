@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin // used for accessing this host url from outside
+@RequestMapping("/api")
 public class ProductController {
 
     @Autowired
@@ -19,13 +21,13 @@ public class ProductController {
         return service.getProducts();
     }
 
-    @GetMapping("/products/{prodId}")
+    @GetMapping("/product/{prodId}")
     public Product getProductById(@PathVariable int prodId) {
         return service.getProductById(prodId);
     }
     @PostMapping("/products")
-    public void addProduct(@RequestBody Product product) {
-        service.addProduct(product);
+    public void addProduct(@RequestBody List<Product> products) {
+        service.addProduct(products);
     }
 
     @PutMapping("/products")

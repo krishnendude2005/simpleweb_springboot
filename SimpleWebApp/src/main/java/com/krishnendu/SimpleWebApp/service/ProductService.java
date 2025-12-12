@@ -24,8 +24,8 @@ public class ProductService {
     public Product getProductById(int prodId) {
         return repo.findById(prodId).orElse(new Product());
     }
-    public void addProduct(Product product) {
-        repo.save(product);
+    public void addProduct(List<Product> products) {
+        repo.saveAll(products);
     }
 
     public void changeProduct(Product product) {
