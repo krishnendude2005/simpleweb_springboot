@@ -22,14 +22,26 @@ public class ProductService {
     }
 
     public Product getProductById(int prodId) {
-        return repo.findById(prodId).orElse(new Product());
+        return repo.findById(prodId).orElse(null);
     }
-    public void addProduct(List<Product> products) {
-        repo.saveAll(products);
+    public Boolean addProduct(List<Product> products) {
+        if(products.isEmpty()) {
+            return false;
+        }
+        else {
+            repo.saveAll(products);
+            return true;
+        }
     }
 
-    public void changeProduct(Product product) {
-        repo.save(product);
+    public Boolean changeProduct(Product product) {
+        if(product == null) {
+            return false;
+        } else {
+            repo.save(product);
+            return true;
+        }
+
     }
 
     public void deleteProduct(int prodId) {

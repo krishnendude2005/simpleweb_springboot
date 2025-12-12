@@ -3,6 +3,8 @@ package com.krishnendu.SimpleWebApp.controller;
 import com.krishnendu.SimpleWebApp.model.Product;
 import com.krishnendu.SimpleWebApp.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,33 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public List<Product> getProducts() {
-        return service.getProducts();
+    public ResponseEntity<?> getProducts() {
+        List<Product> products = service.getProducts();
+
+        if(products == null || products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/product/{prodId}")
-    public Product getProductById(@PathVariable int prodId) {
-        return service.getProductById(prodId);
+    public ResponseEntity<?> getProductById(@PathVariable int prodId) {
+        Product product = service.getProductById(prodId);
+
+        if(product == null) {
+            return ResponseEntity.noContent()   .build();
+        }else {
+            return ResponseEntity.ok(product);
+        }
     }
-    @PostMapping("/products")
-    public void addProduct(@RequestBody List<Product> products) {
-        service.addProduct(products);
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestBody List<Product> products) {
+        Boolean added = service.addProduct(products);
+        if(!added) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
     }
 
     @PutMapping("/products")

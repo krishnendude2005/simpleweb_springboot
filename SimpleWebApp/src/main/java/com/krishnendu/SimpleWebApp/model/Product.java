@@ -29,7 +29,6 @@ public class Product {
     private BigDecimal price;
     private String category;
 
-    @JsonFormat(shape =  JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") // changes the format and how it looks
     private Date releaseDate;     // changed from Date → LocalDate
 
     private Boolean available;         // changed from boolean → Boolean
