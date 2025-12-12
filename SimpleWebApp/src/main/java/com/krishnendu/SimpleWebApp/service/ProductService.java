@@ -4,7 +4,9 @@ import com.krishnendu.SimpleWebApp.model.Product;
 import com.krishnendu.SimpleWebApp.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,14 +26,20 @@ public class ProductService {
     public Product getProductById(int prodId) {
         return repo.findById(prodId).orElse(null);
     }
-    public Boolean addProduct(List<Product> products) {
-        if(products.isEmpty()) {
-            return false;
-        }
-        else {
-            repo.saveAll(products);
-            return true;
-        }
+    public Boolean addProduct(Product product, MultipartFile productImageFile) {
+       try{
+           if(product.getStockQuantity() >= 1) {
+               product.setAvailable(true);
+           }
+
+           product.setImageName(productImageFile.getOriginalFilename());
+           product.setImageType(productImageFile.getContentType());
+           product.setImageData(productImageFile.getBytes());
+            repo.save(product);
+           return true;
+       }catch(Exception e){
+           return false;
+       }
     }
 
     public Boolean changeProduct(Product product) {
@@ -46,5 +54,9 @@ public class ProductService {
 
     public void deleteProduct(int prodId) {
         repo.deleteById(prodId);
+    }
+
+    public byte[] getImage(int prodId) throws IOException {
+        return repo.findById(prodId).get().getImageData();
     }
 }
