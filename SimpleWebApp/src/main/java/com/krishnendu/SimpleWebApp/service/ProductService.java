@@ -1,8 +1,11 @@
 package com.krishnendu.SimpleWebApp.service;
 
+import com.krishnendu.SimpleWebApp.dto.response.ProductWithImageResponse;
+import com.krishnendu.SimpleWebApp.exception.ResourceNotFoundException;
 import com.krishnendu.SimpleWebApp.model.Product;
 import com.krishnendu.SimpleWebApp.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +59,34 @@ public class ProductService {
         repo.deleteById(prodId);
     }
 
-    public byte[] getImage(int prodId) throws IOException {
-        return repo.findById(prodId).get().getImageData();
+    public byte[] getImage(int prodId) {
+        Product product = repo.findById(prodId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found with id : " + prodId)
+                        );
+
+        if(product.getImageData() == null) {
+            throw new ResourceNotFoundException("Image for Product with id : " + prodId + "not found");
+
+        }
+
+        return product.getImageData();
+    }
+
+    public Product updateProduct(Product product, MultipartFile imageFile, int prodId) {
+        try {
+            Product p = getProductById(prodId);
+            p.setImageData(imageFile.getBytes());
+            p.setImageName(imageFile.getOriginalFilename());
+            p.setImageType(imageFile.getContentType());
+            return repo.save(p);
+        }catch(Exception e){
+            throw new ResourceNotFoundException("Some Issue to update image of Product with id : " + prodId);
+        }
+
+    }
+
+    public List<Product> searchProducts(String keyword) {
+        return repo.searchProducts(keyword);
     }
 }
