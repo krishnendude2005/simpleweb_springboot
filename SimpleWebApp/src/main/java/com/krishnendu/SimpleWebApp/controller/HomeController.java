@@ -11,7 +11,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String greet(HttpServletRequest request) {
-        return "Hello Krishnendu De" + request.getSession().getId();
+        return "Hello Krishnendu De " + request.getSession().getId();
     }
 
     @GetMapping("/csrf-token")
