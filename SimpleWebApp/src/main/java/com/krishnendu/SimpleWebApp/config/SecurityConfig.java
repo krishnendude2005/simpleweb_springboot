@@ -50,14 +50,9 @@ public class SecurityConfig {
                 .withDefaultPasswordEncoder()
                 .username("krish")
                 .password("k@123")
+                .roles("USER")
                 .build();
 
-        UserDetails user2 = User
-                .withDefaultPasswordEncoder()
-                .username("krishnendu")
-                .password("k@12345")
-                .build();
-
-        return new InMemoryUserDetailsManager(user1);
+        return new InMemoryUserDetailsManager();
     }
 }
