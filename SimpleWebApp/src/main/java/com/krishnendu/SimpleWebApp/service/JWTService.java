@@ -1,7 +1,10 @@
 package com.krishnendu.SimpleWebApp.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.JwkParserBuilder;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -45,16 +48,20 @@ public class JWTService {
                 .compact();
     }
 
-    private Key getKey() {
+    public Claims getClaimsFromToken(String token) {
+        return (Claims) Jwts.parser().verifyWith(getKey()).build().parse(token).getPayload();
+    }
+    private SecretKey getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUsername(String token) {
-        return "";
+        return getClaimsFromToken(token).getSubject();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
+        // Check user is valid user && token is not expired
         return true;
     }
 }
