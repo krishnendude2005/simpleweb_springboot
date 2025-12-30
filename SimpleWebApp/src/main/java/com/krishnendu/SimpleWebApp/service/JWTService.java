@@ -60,8 +60,17 @@ public class JWTService {
         return getClaimsFromToken(token).getSubject();
     }
 
+    public boolean isTokenExpired(String token) {
+        return getClaimsFromToken(token).getExpiration().before(new Date());
+    }
+
     public boolean validateToken(String token, UserDetails userDetails) {
         // Check user is valid user && token is not expired
-        return true;
+        String username = extractUsername(token);
+
+        if( username.equals(userDetails.getUsername())  && !isTokenExpired(token) ) {
+            return true;
+        }
+        return false;
     }
 }
