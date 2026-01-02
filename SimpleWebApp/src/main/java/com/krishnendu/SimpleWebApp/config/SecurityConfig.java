@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register", "/login").permitAll()
                         .anyRequest().authenticated())
+                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults()) // for postman ( REST Api access )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // stateless
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
