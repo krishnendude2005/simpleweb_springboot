@@ -17,7 +17,7 @@ import java.util.*;
 @Service
 public class JWTService {
 
-    private String secretKey = "";
+    private String secretKey = ""; // We are generating secretKey every restart || It should be stored in application properties 1-Time
     private final String USER_ROLE = "USER";
 
     public JWTService() {
@@ -49,7 +49,12 @@ public class JWTService {
     }
 
     public Claims getClaimsFromToken(String token) {
-        return (Claims) Jwts.parser().verifyWith(getKey()).build().parse(token).getPayload();
+        return (Claims) Jwts
+                .parser() // Tells - "I want to read a JWT"
+                .verifyWith(getKey()) // Tells -  "This is the secret key to verify the token"
+                .build() // Parser is ready, No more changes
+                .parse(token) // Actual parsing happens
+                .getPayload(); // extracts the payload
     }
     private SecretKey getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
