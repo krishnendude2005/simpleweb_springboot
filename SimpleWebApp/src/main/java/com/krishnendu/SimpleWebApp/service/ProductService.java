@@ -17,8 +17,11 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    @Autowired
-    ProductRepo repo;
+    private final ProductRepo repo;
+
+    public ProductService(ProductRepo repo) {
+        this.repo = repo;
+    }
 
 //    List<Product> products = new ArrayList<>(Arrays.asList(new Product(101, "Iphone", 50000), new Product(102, "Android", 60000), new Product(103, "canon camera", 100000)));
     public List<Product> getProducts() {
