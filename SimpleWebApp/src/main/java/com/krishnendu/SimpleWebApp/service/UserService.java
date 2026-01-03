@@ -13,15 +13,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepo repo;
 
-    @Autowired
-    private AuthenticationManager authManager;
-    @Autowired
-    private JWTService jwtService;
+    private final UserRepo repo;
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    public UserService(UserRepo repo, AuthenticationManager authManager, JWTService jwtService) {
+        this.repo = repo;
+        this.authManager = authManager;
+        this.jwtService = jwtService;
+    }
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public Users register(Users user) {
         String hashedPassword = encoder.encode(user.getPassword());
