@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,8 +42,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults()) // for postman ( REST Api access )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // stateless
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))  // stateless
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
 //------------------------------------------------------------------------------
@@ -59,17 +60,16 @@ public class SecurityConfig {
     }
 
 
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        return provider;
+    }
 
-   @Bean
-   public AuthenticationProvider authenticationProvider() {
-       DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-       provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-       return provider;
-   }
-
-   @Bean
+    @Bean
     public AuthenticationManager authicationManager(AuthenticationConfiguration config) {
         return config.getAuthenticationManager();
-   }
+    }
 
 }
