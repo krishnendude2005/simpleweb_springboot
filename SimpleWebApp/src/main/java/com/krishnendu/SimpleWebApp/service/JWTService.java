@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.JwkParserBuilder;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,20 +18,26 @@ import java.util.*;
 @Service
 public class JWTService {
 
-    private String secretKey = ""; // We are generating secretKey every restart || It should be stored in application properties 1-Time
+//    @Value("${jwt.secret}")  // getting the value from application properties
+//    private static String secretKey; // we cannot use final here because - @Value injects after object creation | final fields must be initialized in the constructor | Spring cannot set a final field this way
     private final String USER_ROLE = "USER";
+    private final String secretKey;
 
-    public JWTService() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    public JWTService(@Value("${jwt.secret}") String secretKey) {
+        this.secretKey = secretKey;
     }
+
+//    public JWTService() {
+//        try {
+//            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+//            SecretKey sk = keyGen.generateKey();
+//            secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
 
     public String generateToken(String username) {
 
