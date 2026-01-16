@@ -38,14 +38,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                .csrf(customizer -> customizer.disable())
+                .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/register", "/login", "/oauth2/**").permitAll()
                         .anyRequest().authenticated())
+
+                // oauth2 login
                 .oauth2Login(Customizer.withDefaults())
+
                 .httpBasic(Customizer.withDefaults()) // for postman ( REST Api access )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))  // stateless
+
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .build();
 
 //------------------------------------------------------------------------------

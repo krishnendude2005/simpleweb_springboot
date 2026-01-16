@@ -29,6 +29,17 @@ public class jwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        // If the request is for oauth2 login , we should not block it we just let it pass
+        String path = request.getServletPath();
+
+        if (path.startsWith("/oauth2") || path.startsWith("/login/oauth2")
+                || path.equals("/login") || path.equals("/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         // Bearer "Token"
         String authHeader = request.getHeader("Authorization");
         String token = null;
