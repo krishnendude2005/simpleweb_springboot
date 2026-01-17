@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -40,6 +41,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
 
+                // authorization filter is the filter that does this
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register", "/login", "/oauth2/**").permitAll()
                         .anyRequest().authenticated())
@@ -53,18 +55,10 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
+                .addFilterBefore(new ProhibidoFilter(), AuthorizationFilter.class) // my custom filter
+
                 .build();
 
-//------------------------------------------------------------------------------
-//------------------Other way of doing it without lambda function--------------
-//                Customizer<CsrfConfigurer<HttpSecurity>> custCsrf = new Customizer<CsrfConfigurer<HttpSecurity>>() {
-//            @Override
-//            public void customize(CsrfConfigurer<HttpSecurity> customizer) {
-//                customizer.disable();
-//            }
-//        };
-//        http.csrf(custCsrf);
-//--------------------------------------------------------------------
 
     }
 
