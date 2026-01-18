@@ -55,7 +55,9 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                .addFilterBefore(new ProhibidoFilter(), AuthorizationFilter.class) // my custom filter
+                .addFilterBefore(new ProhibidoFilter(), AuthorizationFilter.class) // my custom filter - ProhibidoFilter
+
+                .addFilterBefore(new RobotAuthenticationFilter(), AuthorizationFilter.class) // my custom filter - RobotAuthenticationFilter
 
                 .build();
 
