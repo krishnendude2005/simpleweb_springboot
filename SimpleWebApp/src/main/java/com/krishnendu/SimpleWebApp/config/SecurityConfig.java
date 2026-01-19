@@ -41,6 +41,9 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
 
+
+                .formLogin(Customizer.withDefaults())
+
                 // authorization filter is the filter that does this
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register", "/login", "/oauth2/**").permitAll()
@@ -58,6 +61,8 @@ public class SecurityConfig {
                 .addFilterBefore(new ProhibidoFilter(), AuthorizationFilter.class) // my custom filter - ProhibidoFilter
 
                 .addFilterBefore(new RobotAuthenticationFilter(), AuthorizationFilter.class) // my custom filter - RobotAuthenticationFilter
+
+                .authenticationProvider(new DanielAuthenticationProvider()) // my custom authentication provider - DanielAuthenticationProvider
 
                 .build();
 
