@@ -1,11 +1,13 @@
 package com.krishnendu.SimpleWebApp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
 
-                .formLogin(Customizer.withDefaults())
+                //.formLogin(Customizer.withDefaults())
 
                 // authorization filter is the filter that does this
                 .authorizeHttpRequests(request -> request
@@ -81,5 +83,19 @@ public class SecurityConfig {
     public AuthenticationManager authicationManager(AuthenticationConfiguration config) {
         return config.getAuthenticationManager();
     }
+
+    @Bean
+    ApplicationListener<AuthenticationSuccessEvent> successListener() {
+        return (event) -> {
+            var auth = event.getAuthentication();
+
+            System.out.printf(
+                    "[%s] logged in as [%s]%n", auth.getName(),
+                    auth.getClass().getSimpleName()
+
+            );
+        };
+    }
+
 
 }
