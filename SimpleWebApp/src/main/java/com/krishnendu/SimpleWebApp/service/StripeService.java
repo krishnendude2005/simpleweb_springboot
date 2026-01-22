@@ -33,8 +33,9 @@ public class StripeService {
 
         // define - currency + amount
         SessionCreateParams.LineItem.PriceData priceData = SessionCreateParams.LineItem.PriceData.builder()
-                .setCurrency(productRequestStripe.getCurrency() == null ? "INR" : productRequestStripe.getCurrency())
+                .setCurrency(productRequestStripe.getCurrency() == null ? "inr" : productRequestStripe.getCurrency())
                 .setUnitAmount(productRequestStripe.getAmount())
+                .setProductData(productData)
                 .build();
 
 
@@ -64,7 +65,7 @@ public class StripeService {
         }
 
 
-      if(session.getId() == null || session.getUrl() == null){
+      if(session == null || session.getId() == null || session.getUrl() == null){
           return StripeResponse.builder()
                   .status(StripeService.FAILURE)
                   .message("Error creating stripe session")
