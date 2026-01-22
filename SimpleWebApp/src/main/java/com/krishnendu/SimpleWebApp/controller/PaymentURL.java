@@ -1,7 +1,9 @@
 package com.krishnendu.SimpleWebApp.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class PayemntURL {
 
     @GetMapping("/success")
@@ -9,7 +11,7 @@ public class PayemntURL {
         return "success";
     }
 
-    @GetMapping
+    @GetMapping("/cancel")
     public String cancel(){
         return "cancel";
     }
