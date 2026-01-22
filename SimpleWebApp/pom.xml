@@ -102,7 +102,12 @@
             <artifactId>stripe-java</artifactId>
             <version>31.2.0</version>
         </dependency>
-++
+
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.8</version>
+        </dependency>
 
     </dependencies>
 
